@@ -5,18 +5,20 @@
 #include <stdlib.h>
 #include <math.h>
 #include <windows.h>
+#include <vector>
 
 using namespace std;
 
-void ordenar(int[], int);
+void ordenar(std::vector<int>, int);
 int convert_octeto(string);
-void calc(int, string, int[], int);
+void calc(int, string, std::vector<int>, int);
 
 int main(){
 	int num_subredes = 0; 
 	int suma = 0;
-	string dir_red; // Direccion de red inicial
+	std::vector<int> posicion;
 	int octeto_final; // Es el octeto con el que vamos a operar 
+	string dir_red; // Direccion de red inicial
 
 	cout << endl << " Introduzca ip: ";
 	cin >> dir_red;
@@ -24,7 +26,7 @@ int main(){
 	cout << endl << " Cuantas subredes desea crear: ";
 	cin >> num_subredes;
 
-	int *posicion = new int[num_subredes]; //Los arrays de tamaño variable se crean asi, si no da errores.
+	posicion.resize(num_subredes);
 
 	for (int i = 0; i < num_subredes; i++){ 
 		cout << endl << " Introduzca la cantidad de ips de la subred numero " << i + 1 << ": ";
@@ -35,7 +37,11 @@ int main(){
 	}
 	
 	if(suma >= (255 - (num_subredes * 2))){ // Comprueba que no se sobrepase el limite quitando 2 ips por cada nueva subred
+		SetConsoleTextAttribute(GetStdHandle (STD_OUTPUT_HANDLE),4);
 		cout << " No se pueden asignar tantas direcciones ip.";
+		SetConsoleTextAttribute(GetStdHandle (STD_OUTPUT_HANDLE),15);
+		cin.ignore();
+		cin.get();
 		exit(1);
 	}
 
@@ -52,7 +58,7 @@ int main(){
 	return 0;
 }
 
-void ordenar(int posicion[], int num_subredes){ // Ordenacion burbuja de mayor a menor ,,, el fallod e que no funcione con mas de 7 subredes puede estar aqui, hacer una irdenacion burbuja inversa aparte y probar con 8 elementos.
+void ordenar(std::vector<int> posicion, int num_subredes){ // Ordenacion burbuja de mayor a menor ,,, el fallod e que no funcione con mas de 7 subredes puede estar aqui, hacer una irdenacion burbuja inversa aparte y probar con 8 elementos.
 	
 	int aux;
     
@@ -88,7 +94,7 @@ int convert_octeto(string dir_red){ // Obtiene el ultimo octeto de la ip para re
 }
 
 //POR AHORA PIDE LA IP, EL NUMERO DE SUBREDES, EL NUMERO DE IPS POR SUBRED, ORDENA DE MENOR A MAYOR LA CANTIDAD DE IPS y extrae el ultimo octeto en formato int (operable).
-void calc(int octeto_final, string dir_red, int posicion[], int num_subredes){
+void calc(int octeto_final, string dir_red, std::vector<int> posicion, int num_subredes){
 	
 	int bits_ocupados = 0;
 	string prim_ip;
