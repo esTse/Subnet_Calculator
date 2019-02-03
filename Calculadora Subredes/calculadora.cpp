@@ -1,5 +1,5 @@
 
-//calc subnetting clase C con array
+//Calculadora de subredes de clase C
 #include <iostream>
 #include <string>
 #include <stdlib.h>
@@ -17,8 +17,8 @@ int main(){
 	int num_subredes = 0; 
 	int suma = 0;
 	std::vector<int> posicion;
-	int octeto_final; // Es el octeto con el que vamos a operar 
-	string dir_red; // Direccion de red inicial
+	int octeto_final;  
+	string dir_red; 
 
 	cout << endl << " Introduzca ip: ";
 	cin >> dir_red;
@@ -50,7 +50,7 @@ int main(){
 	calc(octeto_final, dir_red, posicion, num_subredes);
 
 	SetConsoleTextAttribute(GetStdHandle (STD_OUTPUT_HANDLE),3);
-	cout << endl << " Desarrollado por Esteban Segura. https://github.com/estse" << endl;
+	cout << endl << " https://github.com/estse" << endl;
 	SetConsoleTextAttribute(GetStdHandle (STD_OUTPUT_HANDLE),15);
 
 	cin.ignore();
@@ -58,7 +58,7 @@ int main(){
 	return 0;
 }
 
-void ordenar(std::vector<int> posicion, int num_subredes){ // Ordenacion burbuja de mayor a menor ,,, el fallod e que no funcione con mas de 7 subredes puede estar aqui, hacer una irdenacion burbuja inversa aparte y probar con 8 elementos.
+void ordenar(std::vector<int> posicion, int num_subredes){ // Ordenacion burbuja de mayor a menor.
 	
 	int aux;
     
@@ -93,7 +93,6 @@ int convert_octeto(string dir_red){ // Obtiene el ultimo octeto de la ip para re
 	return octeto;
 }
 
-//POR AHORA PIDE LA IP, EL NUMERO DE SUBREDES, EL NUMERO DE IPS POR SUBRED, ORDENA DE MENOR A MAYOR LA CANTIDAD DE IPS y extrae el ultimo octeto en formato int (operable).
 void calc(int octeto_final, string dir_red, std::vector<int> posicion, int num_subredes){
 	
 	int bits_ocupados = 0;
@@ -103,10 +102,10 @@ void calc(int octeto_final, string dir_red, std::vector<int> posicion, int num_s
 	string mascara;
 	size_t found;
 	int octeto2;
-//Toma un primer valor del array de numero de ips y lo sustituye en n para ver cual es la potencia de 2 mas cercana mayor o igual al numero de ips pedidas
+	// Toma un primer valor del array de numero de ips y lo sustituye en n para ver cual es la potencia de 2 mas cercana mayor o igual al numero de ips pedidas
 	for (int i = 0; i < num_subredes; i++)
 	{
-		octeto_final = octeto_final + bits_ocupados; //Para la direccion de red y primera ip
+		octeto_final = octeto_final + bits_ocupados; // Para la direccion de red y primera ip
 
 		if (log2(posicion[i]+2) <= 7 && log2(posicion[i]+2) >= 6){
 			bits_ocupados = 128 ;
@@ -147,7 +146,7 @@ void calc(int octeto_final, string dir_red, std::vector<int> posicion, int num_s
 		 
 		SetConsoleTextAttribute(GetStdHandle (STD_OUTPUT_HANDLE),15);
 		octeto2 = octeto_final + bits_ocupados; //Para el broadcast y la ultima ip
-		//Obtiene la direccion de red, si es la primera se deja como esta, sino se le suman los bits ocupados.
+		// Obtiene la direccion de red, si es la primera se deja como esta, sino se le suman los bits ocupados.
 		
 		if(i == 0){
 			cout << "     " << "DIRECCION DE RED: " << dir_red <<  endl;
@@ -162,20 +161,20 @@ void calc(int octeto_final, string dir_red, std::vector<int> posicion, int num_s
 		cout << "                                                                      " << endl;
 		cout << "     " << "MASCARA: " << mascara << endl;
 		cout << "                                                                      " << endl;
-		//Obtiene la primera ip que es el resultado de sumar 1 al ultimo octeto. FUNCIONA
+		// Obtiene la primera ip que es el resultado de sumar 1 al ultimo octeto. 
 		found = dir_red.string::find_last_of(".");
 		prim_ip = dir_red.substr(0, found) + "." + std::to_string(octeto_final+1);
 		
 		cout << "     " << "PRIMERA IP: "<< prim_ip <<  endl;
 		
 		cout << "                                                                      " << endl;
-		//Obtiene la ultima ip restandole 1 a la de broadcast.FUNCIONA
+		// Obtiene la ultima ip restandole 1 a la de broadcast.
 		ult_ip = dir_red.substr(0, found) + "." + std::to_string(octeto2-2);
 		
 		cout << "     " << "ULTIMA IP: "<< ult_ip <<  endl;
 		
 		cout << "                                                                      " << endl;
-		//Obtiene la ip de broadcast que es el resultado de restar 1 a la ultima ip. FUNCIONA
+		// Obtiene la ip de broadcast que es el resultado de restar 1 a la ultima ip. 
 		found = dir_red.string::find_last_of(".");
 		broad_ip = dir_red.substr(0, found) + "." + std::to_string(octeto2-1);
 		
@@ -183,4 +182,3 @@ void calc(int octeto_final, string dir_red, std::vector<int> posicion, int num_s
 		SetConsoleTextAttribute(GetStdHandle (STD_OUTPUT_HANDLE),15);
 	}
 }
-//falta calcular las mascara de subred
