@@ -1,5 +1,5 @@
 
-//Calculadora de subredes de clase C
+//Calculadora de subredes de clase C  
 #include <iostream>
 #include <string>
 #include <stdlib.h>
@@ -9,9 +9,10 @@
 
 using namespace std;
 
-void ordenar(std::vector<int>, int);
+void ordenar(std::vector<int>, int num_subredes);
 int convert_octeto(string);
 void calc(int, string, std::vector<int>, int);
+void comprobar(std::vector<int>, int);
 
 int main(){
 	int num_subredes = 0; 
@@ -32,19 +33,8 @@ int main(){
 		cout << endl << " Introduzca la cantidad de ips de la subred numero " << i + 1 << ": ";
 		cin >> posicion[i];
 	}
-	for (int i = 0; i < num_subredes ; i++){ // Suma la cantidad de subredes
-		suma += posicion[i];
-	}
 	
-	if(suma >= (255 - (num_subredes * 2))){ // Comprueba que no se sobrepase el limite quitando 2 ips por cada nueva subred
-		SetConsoleTextAttribute(GetStdHandle (STD_OUTPUT_HANDLE),4);
-		cout << " No se pueden asignar tantas direcciones ip.";
-		SetConsoleTextAttribute(GetStdHandle (STD_OUTPUT_HANDLE),15);
-		cin.ignore();
-		cin.get();
-		exit(1);
-	}
-
+	comprobar(posicion, num_subredes);
 	octeto_final = convert_octeto(dir_red);
 	ordenar(posicion, num_subredes);
 	calc(octeto_final, dir_red, posicion, num_subredes);
@@ -180,5 +170,48 @@ void calc(int octeto_final, string dir_red, std::vector<int> posicion, int num_s
 		
 		cout << "     " << "BROADCAST: " << broad_ip <<  endl << endl << endl;
 		SetConsoleTextAttribute(GetStdHandle (STD_OUTPUT_HANDLE),15);
+	}
+}
+
+void comprobar(std::vector<int>posicion, int num_subredes){ //Comprueba que no se sobrepasen las 256 ips disponibles
+
+	int sumabits = 0;
+	int bits_ocupados = 0;
+	for (int i = 0; i < num_subredes; i++)
+	{
+		if (log2(posicion[i]+2) <= 7 && log2(posicion[i]+2) >= 6){
+			bits_ocupados = 128 ;
+		}
+
+		if (log2(posicion[i]+2) <= 6 && log2(posicion[i]+2) >= 5){
+			bits_ocupados = 64 ;		
+		}	
+
+		if (log2(posicion[i]+2) <= 5 && log2(posicion[i]+2) >= 4){
+			bits_ocupados = 32 ;
+		}
+
+		if (log2(posicion[i]+2) <= 4 && log2(posicion[i]+2) >= 3){
+			bits_ocupados = 16 ;
+		}
+
+		if (log2(posicion[i]+2) <= 3 && log2(posicion[i]+2) >= 2){
+			bits_ocupados = 8 ;
+		}
+
+		if (log2(posicion[i]+2) <= 2 && log2(posicion[i]+2) >= 1){
+			bits_ocupados = 4 ;
+		}
+
+		sumabits = sumabits + bits_ocupados;
+		}
+		
+		if(sumabits > 256 ){ // Comprueba que no se sobrepase el limite quitando 2 ips por cada nueva subred
+			SetConsoleTextAttribute(GetStdHandle (STD_OUTPUT_HANDLE),4);
+			cout << " No se pueden asignar tantas direcciones ip.";
+			SetConsoleTextAttribute(GetStdHandle (STD_OUTPUT_HANDLE),15);
+			cin.ignore();
+			cin.get();
+			exit(1);
 	}
 }
